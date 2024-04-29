@@ -1,0 +1,77 @@
+﻿ @{
+    ViewData["Title"] = "Cadastro de Aluno";
+}
+<div class="text-center">
+    <h1 class="display-4">Cadastrar novo Aluno</h1>
+</div>
+
+<form method="post" asp-controller="Aluno" asp-action="CadastroAluno">
+    <div class="form-row">
+
+        <div class="form-group col-md-12">
+            <label for="inputNome">Nome</label>
+            <input type="text" class="form-control" id="nomeCompleto" name="Nome" autocomplete="off" required placeholder="Nome Completo">
+        </div>
+
+
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="inputDate">Data Nasc.</label>
+            <input type="text" class="form-control" id="inputDate" maxlength="10" name="Nascimento" placeholder="DD/MM/AAAA" oninput="mascaraData(this)" autocomplete="off" required>
+        </div>
+
+
+        <div class="form-group col-md-6">
+            <label for="inputCPF">CPF</label>
+            <input type="text" class="form-control" id="inputCPF" name="CPF" placeholder="XXX.XXX.XXX-XX" maxlength="14" oninput="this.value = cpf(this.value)" autocomplete="off">
+        </div>
+    </div>
+
+
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <label for="inputGender">Gênero</label>
+            <select name="Sexo" id="inputGender" class="form-control">
+                <option value="" selected disabled hidden>Escolha o gênero</option>
+                <option value="masculino">Masculino</option>
+                <option value="feminino">Feminino</option>
+            </select>
+        </div>
+
+
+
+
+        <div class="form-group col-md-5">
+            <div class="form-group col-md-12">
+                <label >Cidade</label>
+                <select  class="form-control">
+                    <option value="" selected disabled hidden>Escolha a Cidade</option>
+
+                        @foreach (var item in Model)
+                        {
+                            <option>
+                                
+                            </option>
+                            <tr>
+                                <td class="text-center col-4">@item.Nome</td>
+                                <td class="text-center col-2">@item.Uf</td>
+                                <td class="text-center">
+                                    <a role="button" class="btn btn-custom-edit text-light" asp-controller="Cidade" asp-action="EditarCidade" asp-route-id="@item.Cidade_Id"> <img src="~/Imagens/pencil.svg" />Editar</a>
+                                </td>
+                            </tr>
+                        }
+                    
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="inputCPF">Estado</label>
+            <input type="text" class="form-control" name="UF" id="inputEstado" required maxlength="10" placeholder="Estado" autocomplete="off">
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary" action="#">Enviar</button>
+    <a class="btn btn-primary col-12" type="submit" role="button" asp-controller="Aluno" asp-action="AdicionarAluno">Cadastrar</a>
+
+    <a class="btn btn-secondary col-12" role="button" asp-controller="Aluno" asp-action="Index">Pagina Inicial</a>
+</form> 

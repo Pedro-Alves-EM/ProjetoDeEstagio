@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1 class="text-center">Cidades Cadastradas</h1>
+
+<div class="d-flex justify-content-center">
+    <table class="table table-hover col-6">
+        <thead class="custom-header-color">
+            <tr>
+                <th scope="col" class="text-center col-4">Nome</th>
+                <th scope="col" class="text-center col-2">Uf</th>
+                <th scope="col" class="text-center col-2">Administrar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center col-4">@item.Nome</td>
+                    <td class="text-center col-2">@item.Uf</td>
+                    <td class="text-center">
+                        <a role="button" class="btn btn-custom-edit text-light" asp-controller="Cidade" asp-action="EditarCidade" asp-route-id="@item.Cidade_Id"> <img src="~/Imagens/pencil.svg" />Editar</a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+<div class="text-center">
+    <a role="button" class="btn btn-custom-edit text-center col-5" asp-controller="Cidade" asp-action="EditarCidade">Nova Cidade</a>
+
+</div>

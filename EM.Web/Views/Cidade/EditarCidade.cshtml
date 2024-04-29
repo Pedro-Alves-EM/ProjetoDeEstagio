@@ -1,0 +1,25 @@
+﻿@model EM.Domain.Cidade.Cidade
+
+@{
+    string title = ViewData["Title"] as string;
+    ViewData["Title"] = string.IsNullOrEmpty(title) ? "Editar Cidade" : title;
+}
+
+<div class="text-center">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+<div class="d-flex justify-content-center">
+    <form method="post" asp-controller="Cidade" asp-action="EditarCidade">
+        <input type="hidden" asp-for="Cidade_Id" />
+        <div class="form-group">
+            <label asp-for="Nome">Nome</label>
+            <input asp-for="Nome" placeholder="Cidade" class="form-control" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label asp-for="Uf" for="inputUf">UF</label>
+            <input asp-for="Uf" placeholder="Uf" class="form-control" autocomplete="off">
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+</div>
