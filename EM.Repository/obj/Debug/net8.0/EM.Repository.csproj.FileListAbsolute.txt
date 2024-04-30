@@ -20,3 +20,4 @@ C:\Users\Escolar Manager\Desktop\projetosDeEstudo\ProjetoEstagio\EM.Repository\o
 C:\Users\Escolar Manager\Desktop\projetosDeEstudo\ProjetoEstagio\EM.Repository\obj\Debug\net8.0\EM.Repository.pdb
 C:\Users\Escolar Manager\Desktop\projetosDeEstudo\ProjetoEstagio\EM.Repository\obj\Debug\net8.0\EM.Repository.genruntimeconfig.cache
 C:\Users\Escolar Manager\Desktop\projetosDeEstudo\ProjetoEstagio\EM.Repository\obj\Debug\net8.0\ref\EM.Repository.dll
+C:\Users\Escolar Manager\Desktop\projetosDeEstudo\ProjetoEstagio\EM.Repository\obj\Debug\net8.0\EM.Repository.sourcelink.json

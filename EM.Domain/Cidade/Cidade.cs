@@ -8,10 +8,7 @@ namespace EM.Domain.Cidade
         public string Uf { get; set; }
         public int Cidade_Id { get; set; }
 
-        public Cidade(string nome, string uf)
-        {
-            Uf = uf;
-        }
+      
         public Cidade() { }
     }
 }

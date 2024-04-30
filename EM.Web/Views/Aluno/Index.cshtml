@@ -1,4 +1,5 @@
-﻿@{
+﻿@using EM.Domain.Cidade
+@{
     ViewData["Title"] = "Alunos Cadastrados";
 }
 <body>
@@ -61,72 +62,23 @@
                 <tbody>
 
 
-
-                  @*   @foreach (var item in Model)
+                    @foreach (var aluno in Model)
                     {
                         <tr>
-                            <td class="text-center col-4">@item.Matricula</td>
-                            <td class="text-center col-2">@item.Nome</td>
-                            <td class="text-center col-2">@item.CPF</td>
-                            <td class="text-center col-2">@item.Cidade</td>
-                            <td class="text-center col-2">@item.Nascimento</td>
-                            <td class="text-center col-2">@item.Sexo</td>
-                            <td class="text-center">
-                                <a role="button" class="btn btn-custom-edit text-light" asp-controller="Cidade" asp-action="EditarAluno"> <img src="~/Imagens/pencil.svg" />Editar</a>
+                            <td>@aluno.Matricula</td>
+                            <td>@aluno.Nome</td>
+                            <td>@aluno.CPF</td>
+                            <td>@aluno.Cidade.Uf</td>
+                            <td>@(aluno.Nascimento.ToString("dd/MM/yyyy"))</td> 
+                            <td>@aluno.Sexo</td>
+                            <td>
+                                <a role="button" class="btn btn-custom-edit text-light" asp-controller="Aluno" asp-action="CadastroAluno" asp-route-id="@aluno.Matricula"> <img src="~/Imagens/pencil.svg" />Editar</a>
+                                <a role="button" class="btn btn-custom-remove text-light" data-toggle="modal" data-target="#exampleModal"><img src="~/Imagens/trash.svg" />Excluir</a>
                             </td>
-
                         </tr>
-                    } *@
+                    }
 
-                    <tr>
-                        <th scope="row" class="text-center">1</th>
-                        <td>Mark Otto</td>
-                        <td class="text-center">000.000.000-01</td>
-                        <td class="text-center">SP</td>
-                        <td class="text-center">00/00/2000</td>
-                        <td class="text-center">Masculino</td>
-                        <td>
-                            <div>
-                                <div class="text-center">
-                                    <a role="button" class="btn btn-custom-edit text-light" asp-controller="Aluno" asp-action="EditarAluno"> <img src="~/Imagens/pencil.svg" />Editar</a>
-                                    <a role="button" class="btn btn-custom-remove text-light" data-toggle="modal" data-target="#exampleModal"><img src="~/Imagens/trash.svg" />Excluir</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="text-center">2</th>
-                        <td>Jacop Thorton</td>
-                        <td class="text-center">000.000.000-02</td>
-                        <td class="text-center">SP</td>
-                        <td class="text-center">00/00/2001</td>
-                        <td class="text-center">Masculino</td>
-                        <td>
-                            <div>
-                                <div class="text-center">
-                                    <a role="button" class="btn btn-custom-edit text-light" asp-controller="Aluno" asp-action="EditarAluno"> <img src="~/Imagens/pencil.svg" />Editar</a>
-                                    <a role="button" class="btn btn-custom-remove text-light" data-toggle="modal" data-target="#exampleModal"><img src="~/Imagens/trash.svg" />Excluir</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
 
-                    <tr>
-                        <th scope="row" class="text-center">3</th>
-                        <td>Isabel Rooney</td>
-                        <td class="text-center">000.000.000-03</td>
-                        <td class="text-center">RJ</td>
-                        <td class="text-center">00/00/2002</td>
-                        <td class="text-center">Feminino</td>
-                        <td>
-                            <div>
-                                <div class="text-center">
-                                    <a role="button" class="btn btn-custom-edit text-light" asp-controller="Aluno" asp-action="EditarAluno"> <img src="~/Imagens/pencil.svg" />Editar</a>
-                                    <a role="button" class="btn btn-custom-remove text-light" data-toggle="modal" data-target="#exampleModal"><img src="~/Imagens/trash.svg" />Excluir</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
 
                 </tbody>
 

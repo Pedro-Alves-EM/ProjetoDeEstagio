@@ -15,3 +15,4 @@ C:\Users\Escolar Manager\Desktop\projetosDeEstudo\ProjetoEstagio\EM.Domain\obj\D
 C:\Users\Escolar Manager\Desktop\projetosDeEstudo\ProjetoEstagio\EM.Domain\obj\Debug\net8.0\EM.Domain.pdb
 C:\Users\Escolar Manager\Desktop\projetosDeEstudo\ProjetoEstagio\EM.Domain\obj\Debug\net8.0\EM.Domain.genruntimeconfig.cache
 C:\Users\Escolar Manager\Desktop\projetosDeEstudo\ProjetoEstagio\EM.Domain\obj\Debug\net8.0\ref\EM.Domain.dll
+C:\Users\Escolar Manager\Desktop\projetosDeEstudo\ProjetoEstagio\EM.Domain\obj\Debug\net8.0\EM.Domain.sourcelink.json

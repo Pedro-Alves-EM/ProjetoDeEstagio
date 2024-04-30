@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "5leFubZzeBsIsG+1BhxwQrBntmaNf3jiVS/LWp7M5a0=",
+  "Hash": "Rkw2gf1HcuNBEHjquwuOtpk+gvExnBUql1f1RBCuwyc=",
   "Source": "EM.Web",
   "BasePath": "_content/EM.Web",
   "Mode": "Default",
@@ -300,6 +300,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Imagens\\trash.svg"
+    },
+    {
+      "Identity": "C:\\Users\\Escolar Manager\\Desktop\\projetosDeEstudo\\ProjetoEstagio\\EM.Web\\wwwroot\\js\\script.js",
+      "SourceId": "EM.Web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Escolar Manager\\Desktop\\projetosDeEstudo\\ProjetoEstagio\\EM.Web\\wwwroot\\",
+      "BasePath": "_content/EM.Web",
+      "RelativePath": "js/script.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\script.js"
     },
     {
       "Identity": "C:\\Users\\Escolar Manager\\Desktop\\projetosDeEstudo\\ProjetoEstagio\\EM.Web\\wwwroot\\js\\site.js",
