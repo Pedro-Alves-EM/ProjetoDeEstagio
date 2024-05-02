@@ -50,9 +50,8 @@ public class AlunoController : Controller
                 _repositorioAluno.Update(aluno);
                 return RedirectToAction("Index");
             }
-
-            _repositorioAluno.Add(aluno);
-            return RedirectToAction("Index");
+                _repositorioAluno.Add(aluno);
+                return RedirectToAction("Index");
         }
 
         ViewBag.OpcoesCidades = _repositorioCidade.GetAll();
@@ -60,5 +59,20 @@ public class AlunoController : Controller
     }
 
 
+    [HttpPost]
+    public IActionResult RemoverAluno(int matricula)
+    {
+        var aluno = _repositorioAluno.Get(c => c.Matricula == matricula).FirstOrDefault();
+
+        if (aluno == null)
+        {
+            return NotFound();
+        }
+        _repositorioAluno.Remove(aluno);
+
+        return RedirectToAction("Index");
+    }
+
+    
 
 }

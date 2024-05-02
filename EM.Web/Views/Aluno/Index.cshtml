@@ -43,8 +43,6 @@
 
 
 
-
-
         <div>
 
             <table class="table table-hover">
@@ -53,7 +51,7 @@
                         <th scope="col" class="text-center">ID</th>
                         <th scope="col" class="col-4">Nome Completo</th>
                         <th scope="col" class="text-center">CPF</th>
-                        <th scope="col" class="text-center">UF</th>
+                        <th scope="col" class="text-center">Uf</th>
                         <th scope="col" class="text-center">Data de Nascimento</th>
                         <th scope="col" class="text-center">Gênero</th>
                         <th scope="col" class="text-center">Administrar Aluno</th>
@@ -73,9 +71,31 @@
                             <td>@aluno.Sexo</td>
                             <td>
                                 <a role="button" class="btn btn-custom-edit text-light" asp-controller="Aluno" asp-action="CadastroAluno" asp-route-id="@aluno.Matricula"> <img src="~/Imagens/pencil.svg" />Editar</a>
-                                <a role="button" class="btn btn-custom-remove text-light" data-toggle="modal" data-target="#exampleModal"><img src="~/Imagens/trash.svg" />Excluir</a>
+                                <a role="button" class="btn btn-custom-remove text-light" data-toggle="modal" data-target="#Excluir_@aluno.Matricula"><img src="~/Imagens/trash.svg" />Excluir</a>
                             </td>
                         </tr>
+                        <div class="modal fade" id="Excluir_@aluno.Matricula" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <div class="d-flex justify-content-center w-100">
+                                            <img src="~/Imagens/alert.svg" id="imagemPerigo" alt="..." class="mw-100 mh-100">
+                                        </div> <br />
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <h4>Deseja excluir o aluno?</h4>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form method="post" action="@Url.Action("RemoverAluno", "Aluno", new {Matricula = aluno.Matricula})">
+                                            <button class="btn btn-custom-remove-confirm col 12" type="submit">Excluir</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     }
 
 
@@ -85,26 +105,7 @@
             </table>
 
         </div>
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="d-flex justify-content-center w-100">
-                            <img src="~/Imagens/alert.svg" id="imagemPerigo" alt="..." class="mw-100 mh-100">
-                        </div> <br />
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <h4>Deseja excluir o aluno?</h4>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="btn btn-custom-remove-confirm col 12">EXCLUIR</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
 
     </div>
 
