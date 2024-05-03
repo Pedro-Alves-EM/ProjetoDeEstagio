@@ -1,4 +1,5 @@
-﻿@using EM.Domain.Cidade
+﻿@using EM.Domain.Aluno
+@using EM.Domain.Cidade
 @{
     ViewData["Title"] = "Alunos Cadastrados";
 }
@@ -26,89 +27,112 @@
                         <option value="matricula">Matricula</option>
                         <option value="nome">Nome</option>
                         <option value="estado">Estado</option>
-                        <option value="cidade">Cidade</option>
                     </select>
                 </div>
             </div>
 
-            <div class="row align-items-end">
-                <div class="col-3">
-                    <input type="text" class="form-control" placeholder="Pesquise" />
+            <form id="searchForm" method="get">
+                <div class="form-row align-items-end">
+                    <div class="col-3">
+                        <input type="text" class="form-control" placeholder="Digite o ID do Aluno" name="id" />
+                    </div>
+                    <div class="col text-end">
+                        <button type="submit" class="btn btn-primary">Buscar Aluno</button>
+                    </div>
                 </div>
-                <div class="col text-end">
-                    <a role="button" class="btn btn-custom-edit text-light">Buscar Aluno</a>
-                </div>
-            </div>
-        </div>
+            </form>
+            <script>
+                document.getElementById('inputSearch').addEventListener('change', function () {
+                    var selectedOption = this.value;
+                    var formAction = '';
+                    switch (selectedOption) {
+                        case 'matricula':
+                            formAction = '@Url.Action("AchePorMatricula", "Aluno")';
+                            break;
+                        case 'nome':
+                            formAction = '@Url.Action("AchePorNome", "Aluno")';
+                            break;
+                        case 'estado':
+                            formAction = '@Url.Action("AchePorUf", "Aluno")'; // Adicione este caso para o método AchePorUf
+                            break;
+                        // Adicione outros casos conforme necessário
+                        default:
+                            formAction = ''; // Ação padrão caso nenhuma opção seja selecionada
+                            break;
+                    }
+                    document.getElementById('searchForm').action = formAction;
+                });
+            </script>
 
 
 
-        <div>
 
-            <table class="table table-hover">
-                <thead class="custom-header-color">
-                    <tr>
-                        <th scope="col" class="text-center">ID</th>
-                        <th scope="col" class="col-4">Nome Completo</th>
-                        <th scope="col" class="text-center">CPF</th>
-                        <th scope="col" class="text-center">Uf</th>
-                        <th scope="col" class="text-center">Data de Nascimento</th>
-                        <th scope="col" class="text-center">Gênero</th>
-                        <th scope="col" class="text-center">Administrar Aluno</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div>
 
-
-                    @foreach (var aluno in Model)
-                    {
+                <table class="table table-hover">
+                    <thead id="navMenuIndex" class="custom-header-color">
                         <tr>
-                            <td>@aluno.Matricula</td>
-                            <td>@aluno.Nome</td>
-                            <td>@aluno.CPF</td>
-                            <td>@aluno.Cidade.Uf</td>
-                            <td>@(aluno.Nascimento.ToString("dd/MM/yyyy"))</td> 
-                            <td>@aluno.Sexo</td>
-                            <td>
-                                <a role="button" class="btn btn-custom-edit text-light" asp-controller="Aluno" asp-action="CadastroAluno" asp-route-id="@aluno.Matricula"> <img src="~/Imagens/pencil.svg" />Editar</a>
-                                <a role="button" class="btn btn-custom-remove text-light" data-toggle="modal" data-target="#Excluir_@aluno.Matricula"><img src="~/Imagens/trash.svg" />Excluir</a>
-                            </td>
+                            <th scope="col" class="text-center">ID</th>
+                            <th scope="col" class="col-4">Nome Completo</th>
+                            <th scope="col" class="text-center">CPF</th>
+                            <th scope="col" class="text-center">Uf</th>
+                            <th scope="col" class="text-center">Data de Nascimento</th>
+                            <th scope="col" class="text-center">Gênero</th>
+                            <th scope="col" class="text-center">Administrar Aluno</th>
                         </tr>
-                        <div class="modal fade" id="Excluir_@aluno.Matricula" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <div class="d-flex justify-content-center w-100">
-                                            <img src="~/Imagens/alert.svg" id="imagemPerigo" alt="..." class="mw-100 mh-100">
-                                        </div> <br />
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body text-center">
-                                        <h4>Deseja excluir o aluno?</h4>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form method="post" action="@Url.Action("RemoverAluno", "Aluno", new {Matricula = aluno.Matricula})">
-                                            <button class="btn btn-custom-remove-confirm col 12" type="submit">Excluir</button>
-                                        </form>
+                    </thead>
+                    <tbody id="tabelIndex">
+
+
+                        @foreach (var aluno in Model)
+                        {
+                            <tr>
+                                <td>@aluno.Matricula</td>
+                                <td>@aluno.Nome</td>
+                                <td>@aluno.CPF</td>
+                                <td>@aluno.Cidade.Uf</td>
+                                <td>@(aluno.Nascimento.ToString("dd/MM/yyyy"))</td>
+                                <td>@aluno.Sexo</td>
+                                <td>
+                                    <a role="button" class="btn btn-custom-edit text-light" asp-controller="Aluno" asp-action="CadastroAluno" asp-route-id="@aluno.Matricula"> <img src="~/Imagens/pencil.svg" />Editar</a>
+                                    <a role="button" class="btn btn-custom-remove text-light" data-toggle="modal" data-target="#Excluir_@aluno.Matricula"><img src="~/Imagens/trash.svg" />Excluir</a>
+                                </td>
+                            </tr>
+                            <div class="modal fade" id="Excluir_@aluno.Matricula" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <div class="d-flex justify-content-center w-100">
+                                                <img src="~/Imagens/alert.svg" id="imagemPerigo" alt="..." class="mw-100 mh-100">
+                                            </div> <br />
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <h4>Deseja excluir o aluno?</h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form method="post" action="@Url.Action("RemoverAluno", "Aluno", new {Matricula = aluno.Matricula})">
+                                                <button class="btn btn-custom-remove-confirm col 12" type="submit">Excluir</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    }
+                        }
 
 
 
-                </tbody>
+                    </tbody>
 
-            </table>
+                </table>
+
+            </div>
+
 
         </div>
-        
-
-    </div>
-
+        <script src="~/js/script.js"></script>
 </body>
 
 

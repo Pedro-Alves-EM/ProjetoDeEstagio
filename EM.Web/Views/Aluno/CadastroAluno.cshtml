@@ -30,7 +30,7 @@
         <div class="form-group col-md-12">
             <label for="inputNome">Nome</label>
             <span class="text-danger">*</span>
-            <input type="text" asp-for="Nome" class="form-control" name="Nome" autocomplete="off" placeholder="Nome Completo" value="@Model.Nome">
+            <input type="text" asp-for="Nome" class="form-control" name="Nome" autocomplete="off" placeholder="Nome Completo" value="@Model?.Nome">
             <span asp-validation-for="Nome" class="text-danger"></span>
         </div>
     </div>
@@ -39,29 +39,48 @@
         <div class="form-group col-md-6">
             <label for="inputDate">Data de Nascimento</label>
             <span class="text-danger">*</span>
-            <input type="date" asp-for="Nascimento" class="form-control" id="inputDate" placeholder="YYYY-MM-DD" autocomplete="off"  >
+            <input type="text" asp-for="Nascimento" class="form-control" id="inputDate" placeholder="YYYY-MM-DD" autocomplete="off" value="@Model.Nascimento.ToString("dd/MM/yyyy")">
             <span asp-validation-for="Nascimento" class="text-danger"></span>
         </div>
 
         <div class="form-group col-md-6">
             <label for="inputCPF">CPF</label>
-            <input type="text" asp-for="CPF" class="form-control" id="inputCPF" placeholder="XXX.XXX.XXX-XX" autocomplete="off" oninput="this.value = formatarCPF(this.value)">
+            <input type="text" asp-for="CPF" class="form-control" id="inputCPF" placeholder="CPF" autocomplete="off" oninput="this.value = formatarCPF(this.value)">
             <span asp-validation-for="CPF" class="text-danger"></span>
         </div>
     </div>
 
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="inputGender">Gênero</label>
-            <span class="text-danger">*</span>
-            <select asp-for="Sexo" id="inputGender" class="form-control" >
-                <option value="Masculino" >Masculino</option>
-                <option value="Feminino" >Feminino</option>
-                <option value="" selected disabled hidden>Escolha o gênero</option>
-            </select>
-            <span asp-validation-for="Sexo" class="text-danger"></span>
+   @{
+        string generoSelecionado = "";
+        if (Model != null && action == "EditarAluno")
+        {
+            generoSelecionado = Model.Sexo.ToString(); ;
+        }
+    }
 
-        </div>
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="inputGender">Gênero</label>
+        <span class="text-danger">*</span>
+            @if (action == "CadastroAluno")
+            {
+                    <select asp-for="Sexo" id="inputGender" class="form-control">
+                        <option value="Masculino">Masculino</option>
+                        <option value="Feminino">Feminino</option>
+                        <option value="" selected disabled hidden>Escolha o gênero</option>
+                    </select>
+            }
+            else
+            {
+                    <select asp-for="Sexo" id="inputGender" class="form-control">
+                        <option value="Masculino" selected="@generoSelecionado.Equals("Masculino", StringComparison.OrdinalIgnoreCase)">Masculino</option>
+                        <option value="Feminino" selected="@generoSelecionado.Equals("Feminino", StringComparison.OrdinalIgnoreCase)">Feminino</option>
+                    </select>
+            }
+        <span asp-validation-for="Sexo" class="text-danger"></span>
+    </div>
+
+
 
         <div class="form-group col-md-6">
             <div class="form-group col-md-12">
@@ -70,20 +89,15 @@
                 <span class="text-danger">*</span>
                 <select asp-for="Cidade.Cidade_Id" class="form-control" id="cidadeSelect">
                     <option value="" selected disabled hidden>Escolha a Cidade</option>
-                    @foreach (var cidade in ViewBag.OpcoesCidades)
-                    {
-                        <option value="@cidade.Cidade_Id">@cidade.Nome (@cidade.Uf)</option>
-                    }
+                @foreach (var cidade in ViewBag.OpcoesCidades)
+                {
+                            <option value="@cidade.Cidade_Id">@cidade.Nome (@cidade.Uf)</option>
+                }
                 </select>
                 <span asp-validation-for="Cidade" class="text-danger"></span>
 
             </div>
         </div>
-
-
-
-      
-
 
     </div>
 

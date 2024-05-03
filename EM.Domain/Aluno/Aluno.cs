@@ -1,6 +1,5 @@
 ﻿using EM.Domain.Interface;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace EM.Domain.Aluno
 {

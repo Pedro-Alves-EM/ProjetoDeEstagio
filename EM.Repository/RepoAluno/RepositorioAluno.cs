@@ -127,7 +127,62 @@ namespace EM.Repository
         }
 
 
-      
+        public Aluno GetByMatricula(int matricula)
+        {
+            Aluno aluno = null;
+            using (FbConnection con = new FbConnection(connectionString))
+            {
+                string query = @"
+            SELECT A.Matricula, A.Nome, A.Sexo, A.Nascimento, A.CPF, C.UF
+            FROM Aluno A
+            INNER JOIN Cidades C ON A.Cidade_Id = C.Cidade_Id
+            WHERE A.Matricula = @Matricula";
+
+                FbCommand command = new FbCommand(query, con);
+                command.Parameters.AddWithValue("@Matricula", matricula);
+
+                try
+                {
+                    con.Open();
+                    FbDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        aluno = new Aluno
+                        {
+                            Nome = reader["NOME"].ToString().ToUpper(),
+                            Matricula = Convert.ToInt32(reader["MATRICULA"]),
+                            CPF = reader["CPF"].ToString(),
+                            Nascimento = (reader["NASCIMENTO"] != DBNull.Value) ? Convert.ToDateTime(reader["NASCIMENTO"]) : DateTime.MinValue,
+                            Sexo = (EnumeradorSexo)Enum.Parse(typeof(EnumeradorSexo), reader["SEXO"].ToString()),
+                            Cidade = new Cidade { Uf = reader["Uf"].ToString().ToUpper() }
+                        };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Erro ao recuperar aluno do banco de dados.", ex);
+                }
+            }
+            return aluno;
+        }
+
+        public List<Aluno> GetByNome(string parteNome)
+        {
+            parteNome = parteNome.ToLower();
+
+            var alunosEncontrados = GetAll().Where(a => a.Nome.ToLower().Contains(parteNome)).ToList();
+
+            return alunosEncontrados;
+        }
+        public List<Aluno> GetByUf(string uf)
+        {
+            uf = uf.ToUpper(); 
+
+            var alunosEncontrados = GetAll().Where(a => a.Cidade.Uf == uf).ToList();
+
+            return alunosEncontrados;
+        }
+
     }
 }
 

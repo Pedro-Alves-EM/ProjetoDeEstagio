@@ -69,3 +69,11 @@ table {
     background-color: #483D8B;
     color: #ffffff;
 }
+
+#navMenuIndex{
+    user-select: none;
+}
+
+#tabelIndex{
+    user-select: none;
+}

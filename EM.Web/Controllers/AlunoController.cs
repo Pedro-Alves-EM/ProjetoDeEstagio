@@ -2,6 +2,8 @@
 using EM.Repository.RepoCidade;
 using EM.Repository;
 using Microsoft.AspNetCore.Mvc;
+using EM.Domain.Cidade;
+using FirebirdSql.Data.FirebirdClient;
 
 public class AlunoController : Controller
 {
@@ -17,11 +19,69 @@ public class AlunoController : Controller
         _repositorioCidade = repositorioCidade;
     }
 
-    public IActionResult Index()
+    //public IActionResult Index(int? matricula)
+    //{
+    //    if (matricula.HasValue)
+    //    {
+    //        var aluno = _repositorioAluno.GetByMatricula(matricula.Value);
+
+    //        if (aluno == null)
+    //        {
+    //            TempData["ErrorMessage"] = "Aluno não encontrado.";
+    //            return RedirectToAction("Index");
+    //        }
+
+    //        var alunoPorMatricula = new List<Aluno> { aluno }; 
+    //        return View(alunoPorMatricula);
+    //    }
+
+    //    var alunos = _repositorioAluno.GetAll();
+    //    return View(alunos);
+    //}
+    public IActionResult Index(int? matricula, string nome, string uf)
     {
-        var alunos = _repositorioAluno.GetAll();
-        return View(alunos);
+        if (matricula.HasValue)
+        {
+            var aluno = _repositorioAluno.GetByMatricula(matricula.Value);
+            if (aluno == null)
+            {
+                TempData["ErrorMessage"] = "Aluno não encontrado.";
+                return RedirectToAction("Index");
+            }
+            var alunoPorMatricula = new List<Aluno> { aluno };
+            return View("Index", alunoPorMatricula);
+        }
+        else if (!string.IsNullOrEmpty(nome))
+        {
+            var alunosPorNome = _repositorioAluno.GetByNome(nome);
+            return View("Index", alunosPorNome);
+        }
+        else if (!string.IsNullOrEmpty(uf)) 
+        {
+            var alunosPorUf = _repositorioAluno.GetByUf(uf);
+            return View("Index", alunosPorUf);
+        }
+
+        var todosAlunosDefault = _repositorioAluno.GetAll();
+        return View(todosAlunosDefault);
     }
+
+
+
+    public IActionResult AchePorMatricula(int id)
+    {
+        return RedirectToAction("Index", new { matricula = id });
+    }
+
+    public IActionResult AchePorNome(string id)
+    {
+        return RedirectToAction("Index", new { nome = id });
+    }
+    public IActionResult AchePorUf(string id)
+    {
+        return RedirectToAction("Index", new { uf = id });
+    }
+
 
     public IActionResult CadastroAluno(int? id)
     {
@@ -57,6 +117,7 @@ public class AlunoController : Controller
         ViewBag.OpcoesCidades = _repositorioCidade.GetAll();
         return View(aluno); 
     }
+   
 
 
     [HttpPost]
@@ -72,6 +133,8 @@ public class AlunoController : Controller
 
         return RedirectToAction("Index");
     }
+
+
 
     
 
