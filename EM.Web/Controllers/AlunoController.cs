@@ -19,25 +19,7 @@ public class AlunoController : Controller
         _repositorioCidade = repositorioCidade;
     }
 
-    //public IActionResult Index(int? matricula)
-    //{
-    //    if (matricula.HasValue)
-    //    {
-    //        var aluno = _repositorioAluno.GetByMatricula(matricula.Value);
 
-    //        if (aluno == null)
-    //        {
-    //            TempData["ErrorMessage"] = "Aluno não encontrado.";
-    //            return RedirectToAction("Index");
-    //        }
-
-    //        var alunoPorMatricula = new List<Aluno> { aluno }; 
-    //        return View(alunoPorMatricula);
-    //    }
-
-    //    var alunos = _repositorioAluno.GetAll();
-    //    return View(alunos);
-    //}
     public IActionResult Index(int? matricula, string nome, string uf)
     {
         if (matricula.HasValue)

@@ -14,6 +14,11 @@
                 <div class="col-6 text-right">
                     <a role="button" class="btn btn-custom-edit align-content-center" asp-controller="Aluno" asp-action="CadastroAluno">Adicionar aluno</a>
                 </div>
+                <form method="get" action="@Url.Action("GerarPDF", "Relatorio")">
+                    <button type="submit">Gerar Relatório</button>
+                </form>
+
+
             </div>
         </div>
 
@@ -37,15 +42,15 @@
                         <input type="text" class="form-control" placeholder="Digite o ID do Aluno" name="id" />
                     </div>
                     <div class="col text-end">
-                        <button type="submit" class="btn btn-primary">Buscar Aluno</button>
+                        <button type="submit" class="btn btn-custom-edit">Buscar Aluno</button>
                     </div>
                 </div>
             </form>
             <script>
                 document.getElementById('inputSearch').addEventListener('change', function () {
-                    var selectedOption = this.value;
+                    var opcao = this.value;
                     var formAction = '';
-                    switch (selectedOption) {
+                    switch (opcao) {
                         case 'matricula':
                             formAction = '@Url.Action("AchePorMatricula", "Aluno")';
                             break;
@@ -53,11 +58,10 @@
                             formAction = '@Url.Action("AchePorNome", "Aluno")';
                             break;
                         case 'estado':
-                            formAction = '@Url.Action("AchePorUf", "Aluno")'; // Adicione este caso para o método AchePorUf
+                            formAction = '@Url.Action("AchePorUf", "Aluno")'; 
                             break;
-                        // Adicione outros casos conforme necessário
                         default:
-                            formAction = ''; // Ação padrão caso nenhuma opção seja selecionada
+                            formAction = ''; 
                             break;
                     }
                     document.getElementById('searchForm').action = formAction;
@@ -71,8 +75,8 @@
 
                 <table class="table table-hover">
                     <thead id="navMenuIndex" class="custom-header-color">
-                        <tr>
-                            <th scope="col" class="text-center">ID</th>
+                        <tr >
+                            <th scope="col" class="text-center col-1">Matricula</th>
                             <th scope="col" class="col-4">Nome Completo</th>
                             <th scope="col" class="text-center">CPF</th>
                             <th scope="col" class="text-center">Uf</th>
@@ -87,13 +91,13 @@
                         @foreach (var aluno in Model)
                         {
                             <tr>
-                                <td>@aluno.Matricula</td>
+                                <td class="text-center">@aluno.Matricula</td>
                                 <td>@aluno.Nome</td>
                                 <td>@aluno.CPF</td>
                                 <td>@aluno.Cidade.Uf</td>
-                                <td>@(aluno.Nascimento.ToString("dd/MM/yyyy"))</td>
+                                <td class="text-center">@(aluno.Nascimento.ToString("dd/MM/yyyy"))</td>
                                 <td>@aluno.Sexo</td>
-                                <td>
+                                <td class="d-table-row">
                                     <a role="button" class="btn btn-custom-edit text-light" asp-controller="Aluno" asp-action="CadastroAluno" asp-route-id="@aluno.Matricula"> <img src="~/Imagens/pencil.svg" />Editar</a>
                                     <a role="button" class="btn btn-custom-remove text-light" data-toggle="modal" data-target="#Excluir_@aluno.Matricula"><img src="~/Imagens/trash.svg" />Excluir</a>
                                 </td>

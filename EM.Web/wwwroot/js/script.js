@@ -33,3 +33,6 @@ document.getElementById('inputSearch').addEventListener('change', function () {
 
     document.getElementById('searchForm').action = formAction;
 });
+
+
+
