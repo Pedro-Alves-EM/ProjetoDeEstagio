@@ -13,6 +13,7 @@ namespace EM.Web.Controllers.Relatorios
 
             try
             {
+
                 // Criar um escritor para o documento PDF
                 PdfWriter.GetInstance(document, new FileStream(filePath, FileMode.Create));
 
