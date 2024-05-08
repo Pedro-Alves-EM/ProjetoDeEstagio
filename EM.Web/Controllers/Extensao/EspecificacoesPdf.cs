@@ -12,7 +12,6 @@ namespace EM.Web.Controllers.Extensao
             document.SetPageSize(new Rectangle(0, 0, PageSize.A4.Width, alturaA4));
         }
 
-        // Método de extensão para definir a largura da tabela como uma porcentagem do espaço disponível
         public static void DimensaoTabela(this PdfPTable table, float percentual)
         {
             percentual = 110f;
@@ -75,12 +74,53 @@ namespace EM.Web.Controllers.Extensao
         public static void DefineEstiloData(this PdfContentByte cb)
         {
             BaseFont fonte = BaseFont.CreateFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-            cb.SetFontAndSize(fonte, 20);
+            cb.SetFontAndSize(fonte, 15);
 
             cb.SetRGBColorFill(0, 0, 0); // Cor preta
 
             // Exemplo: mudar o texto 'Data:' para 'Data' e posicionar no canto superior esquerdo
-            cb.ShowTextAligned(Element.ALIGN_LEFT, "DATA", 485, 805, 0);
+            cb.ShowTextAligned(Element.ALIGN_LEFT, "Data Emissão", 455, 770, 0);
+        }
+
+        public static string CalcularIdade(this Aluno aluno)
+        {
+            DateTime dataNascimento = aluno.Nascimento;
+            TimeSpan diferenca = DateTime.Now - dataNascimento;
+            int anos = (int)(diferenca.Days / 365.25);
+            int meses = (int)((diferenca.Days % 365.25) / 30.4375);
+            int dias = (int)(diferenca.Days % 365.25 % 30.4375);
+
+            return $"{anos} Anos, {meses}m {dias}d";
+        }
+        public static IEnumerable<Aluno> Ordenar(this IEnumerable<Aluno> alunos, string criterio)
+        {
+            switch (criterio)
+            {
+                case "Estado":
+                    return alunos.OrdenarPorEstado();
+                case "Nome":
+                    return alunos.OrdenarPorNome();
+                case "Idade":
+                    return alunos.OrdenarPorIdade();
+                default:
+                    throw new ArgumentException("Criterio de ordenação inválido", nameof(criterio));
+            }
+        }
+
+        public static IEnumerable<Aluno> OrdenarPorEstado(this IEnumerable<Aluno> alunos)
+        {
+            return alunos.OrderBy(aluno => aluno.Cidade?.Uf);
+        }
+
+        public static IEnumerable<Aluno> OrdenarPorNome(this IEnumerable<Aluno> alunos)
+        {
+            return alunos.OrderBy(aluno => aluno.Nome);
+        }
+
+        public static IEnumerable<Aluno> OrdenarPorIdade(this IEnumerable<Aluno> alunos)
+        {
+            return alunos.OrderBy(aluno => aluno.CalcularIdade());
         }
     }
+
 }

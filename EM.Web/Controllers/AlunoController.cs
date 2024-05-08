@@ -2,9 +2,6 @@
 using EM.Repository.RepoCidade;
 using EM.Repository;
 using Microsoft.AspNetCore.Mvc;
-using EM.Domain.Cidade;
-using FirebirdSql.Data.FirebirdClient;
-
 public class AlunoController : Controller
 {
     private readonly RepositorioAluno _repositorioAluno;
@@ -116,8 +113,11 @@ public class AlunoController : Controller
         return RedirectToAction("Index");
     }
 
+    public IActionResult Relatorio()
+    {
+        return View();
+    }
 
-
-    
+ 
 
 }

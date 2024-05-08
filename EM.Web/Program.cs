@@ -2,7 +2,6 @@ using EM.Domain.Aluno;
 using EM.Domain.Cidade;
 using EM.Repository;
 using EM.Repository.RepoCidade;
-using EM.Web.Controllers.Relatorios;
 
 namespace EM.Web
 {
@@ -16,7 +15,6 @@ namespace EM.Web
             builder.Services.AddTransient<RepositorioCidade>(provider => new RepositorioCidade("User=SYSDBA;Password=masterkey;Database=C:\\Users\\Escolar Manager\\Desktop\\projetosDeEstudo\\ProjetoDois\\BD\\CD_CRUD.fdb;DataSource=CD_ALUNOS.FDB;Port=3054;Charset=NONE;Server=localhost;"));
             builder.Services.AddTransient<RepositorioAluno>(provider => new RepositorioAluno("User=SYSDBA;Password=masterkey;Database=C:\\Users\\Escolar Manager\\Desktop\\projetosDeEstudo\\ProjetoDois\\BD\\CD_CRUD.fdb;DataSource=CD_ALUNOS.FDB;Port=3054;Charset=NONE;Server=localhost;"));
             builder.Services.AddTransient<Cidade>();
-            builder.Services.AddTransient<ServicoRelatorio>();
             builder.Services.AddTransient<IRepositorio<Aluno>, RepositorioAluno>(provider =>
     new RepositorioAluno("User=SYSDBA;Password=masterkey;Database=C:\\Users\\Escolar Manager\\Desktop\\projetosDeEstudo\\ProjetoDois\\BD\\CD_CRUD.fdb;DataSource=CD_ALUNOS.FDB;Port=3054;Charset=NONE;Server=localhost;"));
 

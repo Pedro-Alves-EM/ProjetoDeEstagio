@@ -34,5 +34,18 @@ document.getElementById('inputSearch').addEventListener('change', function () {
     document.getElementById('searchForm').action = formAction;
 });
 
+const checkboxes = document.querySelectorAll('input[name="relatorioType"]');
+checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', function () {
+        // Esconde os campos adicionais
+        document.getElementById('camposAdicionais').style.display = 'none';
+
+        // Se a checkbox "Relatório Ordenado" estiver selecionada, exibe os campos adicionais
+        if (this.value === 'ordenado' && this.checked) {
+            document.getElementById('camposAdicionais').style.display = 'block';
+        }
+    });
+});
+
 
 

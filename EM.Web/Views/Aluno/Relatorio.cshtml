@@ -1,0 +1,48 @@
+﻿<div class="container">
+    <h1 class="text-center">Gerador de PDF</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <form method="get" action="@Url.Action("GerarPDF", "Relatorio")">
+                <div class="form-group">
+                    <label for="solicitante">Solicitante:</label>
+                    <input type="text" class="form-control" id="solicitante" name="solicitante" placeholder="Nome...">
+                </div>
+                <div class="form-group">
+                    <label for="ordenarPor">Ordenar por:</label>
+                    <select class="form-control" name="ordenarPor">
+                        <option value="">Padrão</option>
+                        <option value="">Nome</option>
+                        <option value="">Estado(UF)</option>
+                        <option value="">Idade</option>
+                        <option value="" selected disabled hidden>Escolha o ordem</option>
+                    </select>
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-secondary active">
+                                <input type="radio" name="options" id="option1" autocomplete="off" checked>Tradicional
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="options" id="option3" autocomplete="off">Paisagem
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col text-right">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-secondary active">
+                                <input type="radio" name="options" autocomplete="off" checked>Normal
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="options" id="option3" autocomplete="off">Zebrado
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary col 2">Gerar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
