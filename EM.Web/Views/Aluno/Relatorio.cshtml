@@ -1,44 +1,46 @@
 ﻿<div class="container">
-    <h1 class="text-center">Gerador de PDF</h1>
+    <h1 class="text-center">Gerador de Relatórios</h1>
     <div class="row justify-content-center">
         <div class="col-md-5">
-            <form method="get" action="@Url.Action("GerarPDF", "Relatorio")">
+            <form method="get" action="@Url.Action("GerarPDF", "Relatorio")" onsubmit="return validarSelecao()">
                 <div class="form-group">
                     <label for="solicitante">Solicitante:</label>
                     <input type="text" class="form-control" id="solicitante" name="solicitante" placeholder="Nome...">
                 </div>
                 <div class="form-group">
                     <label for="ordenarPor">Ordenar por:</label>
-                    <select class="form-control" name="ordenarPor">
+                    <select class="form-control" name="ordenarPor" id="ordenarPor">
+                        <option value="default" selected disabled hidden>Escolha a ordenação</option>
                         <option value="">Padrão</option>
-                        <option value="">Nome</option>
-                        <option value="">Estado(UF)</option>
-                        <option value="">Idade</option>
-                        <option value="" selected disabled hidden>Escolha o ordem</option>
+                        <option value="Nome">Nome</option>
+                        <option value="Estado">Estado(UF)</option>
+                        <option value="Idade">Idade</option>
                     </select>
                 </div>
                 <div class="form-group row">
                     <div class="col">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-secondary active">
-                                <input type="radio" name="options" id="option1" autocomplete="off" checked>Tradicional
+                                <input type="radio" name="orientacaoPDF" value="normal" autocomplete="off" checked>Normal
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" name="options" id="option3" autocomplete="off">Paisagem
+                                <input type="radio" name="orientacaoPDF" value="paisagem" autocomplete="off">Paisagem
                             </label>
                         </div>
                     </div>
                     <div class="col text-right">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-secondary active">
-                                <input type="radio" name="options" autocomplete="off" checked>Normal
+                                <input type="radio" name="optionsCores" value="normal" autocomplete="off" checked>Normal
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" name="options" id="option3" autocomplete="off">Zebrado
+                                <input type="radio" name="optionsCores" value="zebrado" autocomplete="off">Zebrado
                             </label>
                         </div>
                     </div>
                 </div>
+                <input type="hidden" id="orientacaoPDF" name="orientacaoPDF" value="">
+                <input type="hidden" id="orientacaoPDFCores" name="orientacaoPDFCOres" value="">
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary col 2">Gerar</button>
                 </div>
@@ -46,3 +48,20 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function (event) {
+        var selecionado = document.getElementById("ordenarPor").value;
+        if (selecionado === "default") {
+            alert("Por favor, selecione uma opção válida de ordenação.");
+            event.preventDefault(); // Impede o envio do formulário
+            return;
+        }
+
+        var orientacaoSelecionada = document.querySelector('input[name="orientacaoPDF"]:checked').value; // Corrigido
+        document.getElementById("orientacaoPDF").value = orientacaoSelecionada;
+
+        var orientacaoCorSelecionada = document.querySelector('input[name="optionsCores"]:checked').value;
+        document.getElementById("orientacaoPDFCores").value = orientacaoCorSelecionada;
+    });
+</script>

@@ -7,7 +7,7 @@ namespace EM.Web.Controllers.Extensao
     {
         public static void DefineCorDeFundoTabelaCabecalho(this PdfPCell cell)
         {
-            cell.BackgroundColor = new BaseColor(105, 89, 205); // Cor fixa
+            cell.BackgroundColor = new BaseColor(72, 61, 139); // Cor fixa
         }
        
     }

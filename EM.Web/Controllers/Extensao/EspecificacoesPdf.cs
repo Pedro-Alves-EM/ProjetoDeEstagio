@@ -44,7 +44,7 @@ namespace EM.Web.Controllers.Extensao
         }
         public static void DefineAlturaCabecalhoTabela(this PdfPTable table)
         {
-            float alturaFixa = 35f; 
+            float alturaFixa = 35f;
 
             foreach (PdfPCell cell in table.Rows.SelectMany(r => r.GetCells()))
             {
@@ -71,15 +71,14 @@ namespace EM.Web.Controllers.Extensao
                 cell.VerticalAlignment = Element.ALIGN_MIDDLE; // Centraliza no eixo Y
             }
         }
-        public static void DefineEstiloData(this PdfContentByte cb)
+        public static void DefineEstiloData(this PdfContentByte cb, string texto, float posX, float posY)
         {
             BaseFont fonte = BaseFont.CreateFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             cb.SetFontAndSize(fonte, 15);
 
             cb.SetRGBColorFill(0, 0, 0); // Cor preta
 
-            // Exemplo: mudar o texto 'Data:' para 'Data' e posicionar no canto superior esquerdo
-            cb.ShowTextAligned(Element.ALIGN_LEFT, "Data Emissão", 455, 770, 0);
+            cb.ShowTextAligned(Element.ALIGN_LEFT, texto, posX, posY, 0);
         }
 
         public static string CalcularIdade(this Aluno aluno)
@@ -121,6 +120,22 @@ namespace EM.Web.Controllers.Extensao
         {
             return alunos.OrderBy(aluno => aluno.CalcularIdade());
         }
+        public static void ZebrarPDF(this PdfPTable table, BaseColor corPar, BaseColor corImpar)
+        {
+            bool isPar = false;
+
+            for (int i = 1; i < table.Rows.Count; i++)
+            {
+                PdfPRow row = table.Rows[i];
+                foreach (PdfPCell cell in row.GetCells())
+                {
+                    cell.BackgroundColor = isPar ? corPar : corImpar;
+                }
+                isPar = !isPar;
+            }
+
+        }
+
     }
 
 }

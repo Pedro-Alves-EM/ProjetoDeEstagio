@@ -7,6 +7,7 @@ using EM.Repository;
 using EM.Web.Controllers.Extensao;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace EM.Web.Controllers
 {
@@ -19,33 +20,50 @@ namespace EM.Web.Controllers
             _repositorioAluno = repositorioAluno;
         }
 
-        public IActionResult GerarPDF()
+        private IActionResult GerarPDFComOrdenacao(string ordenacao, List<Aluno> alunos, string nomeArquivo, bool paisagem, bool zebrado)
         {
-            string filePath = "C:\\Users\\Escolar Manager\\Desktop\\projetosDeEstudo\\ProjetoEstagio\\PDFSGerados\\documento.pdf";
+            string filePath = "C:\\Users\\Escolar Manager\\Desktop\\projetosDeEstudo\\ProjetoEstagio\\PDFSGerados\\" + nomeArquivo;
 
-            Document document = new Document();
-            document.SetMargins(document.LeftMargin, document.RightMargin, 120f, 70f); 
+            Document document = paisagem ? new Document(PageSize.A4.Rotate()) : new Document();
+
+            document.SetMargins(document.LeftMargin, document.RightMargin, 120f, 70f);
 
             PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(filePath, FileMode.Create));
-            writer.PageEvent = new Cabecalho();
+
+            // Criar instância do cabeçalho e configurar o evento OnEndPage
+            var cabecalho = new Cabecalho();
+            writer.PageEvent = cabecalho;
 
             try
             {
                 document.Open();
-               
-
 
                 PdfPTable table = new PdfPTable(6);
                 table.DimensaoTabela(110f);
                 table.SpacingAfter = 80;
+
                 PdfContentByte cb = writer.DirectContent;
+
+                // Defina a cor do contorno e a largura da linha
                 cb.SetRGBColorStroke(0, 0, 0);
                 cb.SetLineWidth(1f);
 
-                cb.RoundRectangle(445, 740, 130, 50, 10);
+                // Calcule as coordenadas X e Y para o retângulo redondo no canto superior direito
+                float larguraRetangulo = 130;
+                float alturaRetangulo = 50;
+                float margemDireita = 20; // Margem direita da página
+                float margemSuperior = 40; // Margem superior da página
+                float posicaoX = document.PageSize.Width - larguraRetangulo - margemDireita;
+                float posicaoY = document.PageSize.Height - alturaRetangulo - margemSuperior;
+
+                // Desenhe o retângulo redondo
+                cb.RoundRectangle(posicaoX, posicaoY, larguraRetangulo, alturaRetangulo, 10);
                 cb.Stroke();
 
+                // Comece a adicionar texto
                 cb.BeginText();
+
+                // Defina a cor de preenchimento para o texto
                 cb.SetRGBColorFill(0, 0, 0);
 
                 float tamanhoFonte = 10f;
@@ -54,13 +72,19 @@ namespace EM.Web.Controllers
                 DateTime agora = DateTime.Now;
                 string dataHoraFormatada = agora.PegueDataHora();
 
+                // Calcule a largura do texto
                 float larguraTexto = cb.GetEffectiveStringWidth(dataHoraFormatada, false);
 
-                float posX = 435 + (145 - larguraTexto) / 2;
+                // Calcule a posição X para centralizar o texto no retângulo
+                float posX = posicaoX + (larguraRetangulo - larguraTexto) / 2;
 
-                cb.ShowTextAligned(Element.ALIGN_LEFT, dataHoraFormatada, posX, 755, 0);
+                // Posição Y para o texto (um pouco abaixo do topo do retângulo)
+                float posY = posicaoY + alturaRetangulo - 30;
 
-                cb.DefineEstiloData();
+                // Mostre o texto alinhado ao centro do retângulo
+                cb.ShowTextAligned(Element.ALIGN_LEFT, dataHoraFormatada, posX, posY - 5, 0);
+
+                cb.DefineEstiloData("Data Emissão", posX - 7, posY + 10);
                 cb.EndText();
 
                 Font fonteFormatadaCabecalho = new Font(Font.FontFamily.COURIER, 24f);
@@ -81,9 +105,6 @@ namespace EM.Web.Controllers
                 table.DefineFonteCabecalhoTabela();
                 table.CentralizeCabecalhoTabela();
 
-                // Obtendo os alunos do repositório
-                var alunos = _repositorioAluno.GetAll().ToList();
-
                 // Preenchendo a tabela com os dados dos alunos
                 foreach (var aluno in alunos)
                 {
@@ -94,28 +115,38 @@ namespace EM.Web.Controllers
                     table.AddCell(CreateCell(aluno.CalcularIdade()));
                     table.AddCell(CreateCell(aluno.Sexo.ObterSiglaSexo()));
                 }
-                // Adiciona a tabela ao documento
+
+                table.HeaderRows = 1;
+                if (zebrado)
+                {
+                    table.ZebrarPDF(BaseColor.LIGHT_GRAY, BaseColor.WHITE);
+                }
+
+              
+
                 document.Add(table);
             }
             catch (DocumentException de)
             {
-                Console.Error.WriteLine("Erro ao criar o documento: " + de.Message);
+                Console.Error.WriteLine($"Erro ao criar o PDF ordenado por {ordenacao}: {de.Message}");
             }
             catch (IOException ioe)
             {
-                Console.Error.WriteLine("Erro de I/O: " + ioe.Message);
+                Console.Error.WriteLine($"Erro de I/O: {ioe.Message}");
             }
             finally
             {
-                // Fechar o documento
+                int totalPaginas = writer.PageNumber;
+
+                cabecalho.SetTotalPaginas(totalPaginas);
                 document.Close();
             }
 
-            // Retorna o arquivo PDF para download
             var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return File(fileStream, "application/pdf", "documento.pdf");
-
+            return File(fileStream, "application/pdf", nomeArquivo);
         }
+
+
         private PdfPCell CreateCell(string text, int alignment = Element.ALIGN_CENTER)
         {
             PdfPCell cell = new PdfPCell(new Phrase(text, new Font(Font.FontFamily.COURIER, 13f)));
@@ -124,174 +155,31 @@ namespace EM.Web.Controllers
             cell.VerticalAlignment = Element.ALIGN_MIDDLE;
             return cell;
         }
-        public IActionResult GerarPDFPorNome()
+
+        public IActionResult GerarPDF(string ordenarPor, string orientacaoPDF, string orientacaoPDFCores)
         {
-            // Obter os alunos ordenados por nome
+            List<Aluno> alunosOrdenados = null;
 
-            string filePath = "C:\\Users\\Escolar Manager\\Desktop\\projetosDeEstudo\\ProjetoEstagio\\PDFSGerados\\documento.pdf";
-
-            Document document = new Document();
-            document.SetMargins(document.LeftMargin, document.RightMargin, 120f, 70f);
-
-            PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(filePath, FileMode.Create));
-            writer.PageEvent = new Cabecalho();
-
-            try
+            switch (ordenarPor)
             {
-                document.Open();
-
-
-
-                PdfPTable table = new PdfPTable(6);
-                table.DimensaoTabela(110f);
-                table.SpacingAfter = 80;
-                PdfContentByte cb = writer.DirectContent;
-                cb.SetRGBColorStroke(0, 0, 0);
-                cb.SetLineWidth(1f);
-
-                cb.RoundRectangle(445, 740, 130, 50, 10);
-                cb.Stroke();
-
-                cb.BeginText();
-                cb.SetRGBColorFill(0, 0, 0);
-
-                float tamanhoFonte = 10f;
-                cb.SetFontAndSize(BaseFont.CreateFont(), tamanhoFonte);
-
-                DateTime agora = DateTime.Now;
-                string dataHoraFormatada = agora.PegueDataHora();
-
-                float larguraTexto = cb.GetEffectiveStringWidth(dataHoraFormatada, false);
-
-                float posX = 435 + (145 - larguraTexto) / 2;
-
-                cb.ShowTextAligned(Element.ALIGN_LEFT, dataHoraFormatada, posX, 755, 0);
-
-                cb.DefineEstiloData();
-                cb.EndText();
-
-                Font fonteFormatadaCabecalho = new Font(Font.FontFamily.COURIER, 24f);
-
-                float[] columnWidths = { 0.5f, 3f, 1.8f, 0.5f, 2f, 0.7f };
-                table.SetWidths(columnWidths);
-
-                PdfPCell celulaTituloTabela;
-                celulaTituloTabela = new PdfPCell(new Phrase("MA", fonteFormatadaCabecalho));
-                celulaTituloTabela.HorizontalAlignment = Element.ALIGN_CENTER;
-                celulaTituloTabela.DefineCorDeFundoTabelaCabecalho();
-                celulaTituloTabela.DefineCorTexto();
-                table.AddCell(celulaTituloTabela);
-
-                celulaTituloTabela = new PdfPCell(new Phrase("NOME", fonteFormatadaCabecalho));
-                celulaTituloTabela.HorizontalAlignment = Element.ALIGN_LEFT;
-                celulaTituloTabela.DefineCorDeFundoTabelaCabecalho();
-                celulaTituloTabela.DefineCorTexto();
-                table.AddCell(celulaTituloTabela);
-
-                celulaTituloTabela = new PdfPCell(new Phrase("CPF", fonteFormatadaCabecalho));
-                celulaTituloTabela.HorizontalAlignment = Element.ALIGN_CENTER;
-                celulaTituloTabela.DefineCorDeFundoTabelaCabecalho();
-                celulaTituloTabela.DefineCorTexto();
-                table.AddCell(celulaTituloTabela);
-
-                celulaTituloTabela = new PdfPCell(new Phrase("UF", fonteFormatadaCabecalho));
-                celulaTituloTabela.HorizontalAlignment = Element.ALIGN_CENTER;
-                celulaTituloTabela.DefineCorDeFundoTabelaCabecalho();
-                celulaTituloTabela.DefineCorTexto();
-                table.AddCell(celulaTituloTabela);
-
-                celulaTituloTabela = new PdfPCell(new Phrase("Idade", fonteFormatadaCabecalho));
-                celulaTituloTabela.HorizontalAlignment = Element.ALIGN_CENTER;
-                celulaTituloTabela.DefineCorDeFundoTabelaCabecalho();
-                celulaTituloTabela.DefineCorTexto();
-                table.AddCell(celulaTituloTabela);
-
-                celulaTituloTabela = new PdfPCell(new Phrase("SEXO", fonteFormatadaCabecalho));
-                celulaTituloTabela.HorizontalAlignment = Element.ALIGN_CENTER;
-                celulaTituloTabela.DefineCorDeFundoTabelaCabecalho();
-                celulaTituloTabela.DefineCorTexto();
-                table.AddCell(celulaTituloTabela);
-
-                table.DefineAlturaCabecalhoTabela();
-                table.DefineFonteCabecalhoTabela();
-                table.CentralizeCabecalhoTabela();
-
-                // Obtendo os alunos do repositório
-                var alunos = _repositorioAluno.GetAll().OrdenarPorNome().ToList();
-
-                // Preenchendo a tabela com os dados dos alunos
-                foreach (var aluno in alunos)
-                {
-                    PdfPCell celulaTabela;
-                    Font fonteFormatadaTabela = new Font(Font.FontFamily.COURIER, 13f);
-                    // Adicionando células à tabela
-                    celulaTabela = new PdfPCell(new Phrase(aluno?.Matricula.ToString() ?? "", fonteFormatadaTabela));
-                    celulaTabela.HorizontalAlignment = Element.ALIGN_CENTER;
-                    celulaTabela.DefineAlturaCelulaTabela();
-                    celulaTabela.VerticalAlignment = Element.ALIGN_MIDDLE; // Centraliza verticalmente
-                    celulaTabela.HorizontalAlignment = Element.ALIGN_CENTER; // Centraliza horizontalmente
-                    table.AddCell(celulaTabela);
-
-                    celulaTabela = new PdfPCell(new Phrase(aluno?.Nome ?? "", fonteFormatadaTabela));
-                    celulaTabela.HorizontalAlignment = Element.ALIGN_LEFT;
-                    celulaTabela.DefineAlturaCelulaTabela();
-                    celulaTabela.VerticalAlignment = Element.ALIGN_MIDDLE; // Centraliza verticalmente
-                    table.AddCell(celulaTabela);
-
-                    celulaTabela = new PdfPCell(new Phrase(aluno?.CPF ?? "", fonteFormatadaTabela));
-                    celulaTabela.HorizontalAlignment = Element.ALIGN_CENTER;
-                    celulaTabela.DefineAlturaCelulaTabela();
-                    celulaTabela.VerticalAlignment = Element.ALIGN_MIDDLE; // Centraliza verticalmente
-                    celulaTabela.HorizontalAlignment = Element.ALIGN_CENTER; // Centraliza horizontalmente
-                    table.AddCell(celulaTabela);
-
-                    celulaTabela = new PdfPCell(new Phrase(aluno?.Cidade?.Uf ?? "", fonteFormatadaTabela));
-                    celulaTabela.HorizontalAlignment = Element.ALIGN_CENTER;
-                    celulaTabela.DefineAlturaCelulaTabela();
-                    celulaTabela.VerticalAlignment = Element.ALIGN_MIDDLE; // Centraliza verticalmente
-                    celulaTabela.HorizontalAlignment = Element.ALIGN_CENTER; // Centraliza horizontalmente
-                    table.AddCell(celulaTabela);
-
-                    string idade = aluno.CalcularIdade();
-
-                    celulaTabela = new PdfPCell(new Phrase(idade, fonteFormatadaTabela));
-                    celulaTabela.HorizontalAlignment = Element.ALIGN_CENTER;
-                    celulaTabela.DefineAlturaCelulaTabela();
-                    celulaTabela.VerticalAlignment = Element.ALIGN_MIDDLE;
-                    celulaTabela.HorizontalAlignment = Element.ALIGN_CENTER;
-                    table.AddCell(celulaTabela);
-
-                    // Adicionei o método DefineAlturaCelulaTabela para a célula de sexo também, como você mencionou
-                    celulaTabela = new PdfPCell(new Phrase(aluno.Sexo.ObterSiglaSexo(), fonteFormatadaTabela));
-                    celulaTabela.HorizontalAlignment = Element.ALIGN_CENTER;
-                    celulaTabela.DefineAlturaCelulaTabela();
-                    celulaTabela.VerticalAlignment = Element.ALIGN_MIDDLE; // Centraliza verticalmente
-                    celulaTabela.HorizontalAlignment = Element.ALIGN_CENTER; // Centraliza horizontalmente
-                    table.AddCell(celulaTabela);
-                }
-
-                // Adiciona a tabela ao documento
-                document.Add(table);
-            }
-            catch (DocumentException de)
-            {
-                Console.Error.WriteLine("Erro ao criar o documento: " + de.Message);
-            }
-            catch (IOException ioe)
-            {
-                Console.Error.WriteLine("Erro de I/O: " + ioe.Message);
-            }
-            finally
-            {
-                // Fechar o documento
-                document.Close();
+                case "Nome":
+                    alunosOrdenados = _repositorioAluno.GetAll().OrdenarPorNome().ToList();
+                    break;
+                case "Estado":
+                    alunosOrdenados = _repositorioAluno.GetAll().OrdenarPorEstado().ToList();
+                    break;
+                case "Idade":
+                    alunosOrdenados = _repositorioAluno.GetAll().OrdenarPorIdade().ToList();
+                    break;
+                default:
+                    alunosOrdenados = _repositorioAluno.GetAll().ToList();
+                    break;
             }
 
-            // Retorna o arquivo PDF para download
-            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return File(fileStream, "application/pdf", "documento.pdf");
+            bool paisagem = orientacaoPDF == "paisagem";
+            bool zebrado = orientacaoPDFCores == "zebrado";
 
+            return GerarPDFComOrdenacao(ordenarPor, alunosOrdenados, $"pdf{ordenarPor}.pdf", paisagem, zebrado);
         }
-
     }
 }

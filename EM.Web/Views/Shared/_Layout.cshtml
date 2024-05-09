@@ -31,26 +31,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Aluno" asp-action="Relatorio">Relatórios</a>
                         </li>
-                        <li>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                    Gerar relatório
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
-                                    <li>
-                                        <form method="get" action="@Url.Action("GerarPDF", "Relatorio")">
-                                            <button type="submit">Gerar Relatório</button>
-                                        </form>
-                                    </li>
-                                    <li>
-                                        <form method="get" action="@Url.Action("GerarPDFPorNome", "Relatorio")">
-                                            <button type="submit">Gerar Relatório Por Estado</button>
-                                        </form>
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Menu item</a></li>
-                                </ul>
-                            </div>
-                        </li>
+                       
                     </ul>
                 </div>
             </div>
